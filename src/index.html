@@ -2,11 +2,81 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" href="data:," />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
   </head>
   <body>
+    <video id="video" controls style="display: none">
+      <source src="./texture/360withreverse.mp4" type="video/mp4" />
+    </video>
+    <div class="controlsBtn">
+      <button class="forwardBtn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          style="width: 20px"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"
+          />
+        </svg>
+      </button>
+      <button class="playBtn">
+        <svg
+          class="pauseIcon"
+          xmlns="http://www.w3.org/2000/svg"
+          style="width: 20px"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <svg
+          class="playIcon"
+          xmlns="http://www.w3.org/2000/svg"
+          style="width: 20px"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+      <button class="rewindBtn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          style="width: 20px"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"
+          />
+        </svg>
+      </button>
+    </div>
+    <img
+      class="loading"
+      src="./spinner.gif"
+      alt="This will display an animated GIF"
+    />
     <canvas id="canvas"></canvas>
     <script type="module" src="/main.js"></script>
   </body>
