@@ -94,7 +94,7 @@ video.addEventListener('waiting', () => {
 	/**
 	 * Loading 
 	 */
-	loading.style.display = 'inline';
+	loading.style.display = 'inline'; 
 })
 
 
