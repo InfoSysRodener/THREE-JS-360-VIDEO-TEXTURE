@@ -147,6 +147,7 @@ function play(){
 
 function forward() {
 	console.log('forward',video.readyState);
+	console.log('putangina mo',video.currentTime);
 	isForward ? continuousTo('forward') : changingTo('backward-forward');
 	video.currentTime = continueAtTime;
 	video.play();
@@ -155,6 +156,7 @@ function forward() {
 
 function backward(){
 	console.log('backward',video.readyState);
+	console.log('putangina mo',video.currentTime);
 	isBackward ? continuousTo('backward') : changingTo('forward-backward');
 	video.currentTime = continueAtTime;
 	video.play();
