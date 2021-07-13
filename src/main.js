@@ -158,6 +158,7 @@ function backward(){
 	console.log('backward',video.readyState);
 	console.log('putangina mo',video.currentTime);
 	isBackward ? continuousTo('backward') : changingTo('forward-backward');
+	console.log('putangina mo',((video.currentTime - midpoint) * -1)  + midpoint);
 	video.currentTime = continueAtTime;
 	video.play();
 }
