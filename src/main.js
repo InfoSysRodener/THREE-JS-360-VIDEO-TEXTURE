@@ -18,15 +18,14 @@ pauseIcon.style.display = 'none';
 playBtn.onclick = (e) => {
 	e.preventDefault();
 	play();
-	rewindBtn.removeAttribute('disabled');
-	forwardBtn.removeAttribute('disabled');
+	// rewindBtn.removeAttribute('disabled');
+	// forwardBtn.removeAttribute('disabled');
 }
 
 forwardBtn.onclick = (e) => {
 	e.preventDefault();
 	forward();
 	forwardBtn.setAttribute('disabled',true);
-	playBtn.removeAttribute('disabled');
 	rewindBtn.removeAttribute('disabled');
 }
 
@@ -34,7 +33,6 @@ rewindBtn.onclick = (e) => {
 	e.preventDefault();
 	backward();
 	rewindBtn.setAttribute('disabled',true);
-	playBtn.removeAttribute('disabled');
 	forwardBtn.removeAttribute('disabled');
 }
 
@@ -84,7 +82,7 @@ video.addEventListener('timeupdate', () => {
 		forwardBtn.setAttribute('disabled',true);
 		video.currentTime = midpoint;
 		video.pause();
-	} 
+	}
 });
 
 video.addEventListener('playing', () => {
@@ -127,7 +125,18 @@ video.addEventListener('pause', () => {
 })
 
 function play(){
-	isPlaying ?	video.pause() :	video.play();
+	if(isPlaying) {
+		video.pause() 
+	}else{
+		if(isForward){
+			forwardBtn.setAttribute('disabled',true);
+			rewindBtn.removeAttribute('disabled');
+		}else{
+			forwardBtn.removeAttribute('disabled',true);
+			rewindBtn.setAttribute('disabled',true);
+		}
+		video.play();
+	}
 }
 
 function forward() {
@@ -139,7 +148,6 @@ function forward() {
 function backward(){
 	isBackward ? continuousTo('backward') : changingTo('forward-backward');
 	video.currentTime = continueAtTime;
-	console.log(continueAtTime);
 	video.play();
 }
 
