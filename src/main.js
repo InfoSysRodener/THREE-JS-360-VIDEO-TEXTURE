@@ -54,8 +54,10 @@ scene.add(mesh);
  rewindBtn.setAttribute('disabled',true);
  
  playBtn.onclick = (e) => {
-	 e.preventDefault();
+	e.preventDefault();
+	if(video.readyState >= 2){
 	 play();
+	}
  }
  
  forwardBtn.onclick = (e) => {
