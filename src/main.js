@@ -14,12 +14,11 @@ const playIcon = document.querySelector('.playIcon');
 const pauseIcon = document.querySelector('.pauseIcon');
 const loading = document.querySelector('.loading');
 pauseIcon.style.display = 'none';
+rewindBtn.setAttribute('disabled',true);
 
 playBtn.onclick = (e) => {
 	e.preventDefault();
 	play();
-	// rewindBtn.removeAttribute('disabled');
-	// forwardBtn.removeAttribute('disabled');
 }
 
 forwardBtn.onclick = (e) => {
