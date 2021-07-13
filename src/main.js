@@ -112,6 +112,14 @@ video.addEventListener('waiting', () => {
 
 })
 
+/**
+ * Ended
+ */
+video.addEventListener('ended', () => {
+	isForward = true;
+	isBackward = false;
+})
+
 video.addEventListener('pause', () => {
 	isPlaying = false;
 	pauseIcon.style.display = 'none';
@@ -131,6 +139,7 @@ function forward() {
 function backward(){
 	isBackward ? continuousTo('backward') : changingTo('forward-backward');
 	video.currentTime = continueAtTime;
+	console.log(continueAtTime);
 	video.play();
 }
 
@@ -163,6 +172,7 @@ function continuousTo(value){
 			break;
 	}
 }
+
 
 
 
