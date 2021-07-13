@@ -3,37 +3,7 @@ import * as THREE from 'three';
 import * as dat from 'dat.gui';
 import SceneManager from './sceneManager/scene';
 
-/**
- * Dom
- */
 
-const playBtn = document.querySelector('.playBtn');
-const forwardBtn = document.querySelector('.forwardBtn');
-const rewindBtn = document.querySelector('.rewindBtn');
-const playIcon = document.querySelector('.playIcon');
-const pauseIcon = document.querySelector('.pauseIcon');
-const loading = document.querySelector('.loading');
-pauseIcon.style.display = 'none';
-rewindBtn.setAttribute('disabled',true);
-
-playBtn.onclick = (e) => {
-	e.preventDefault();
-	play();
-}
-
-forwardBtn.onclick = (e) => {
-	e.preventDefault();
-	forward();
-	forwardBtn.setAttribute('disabled',true);
-	rewindBtn.removeAttribute('disabled');
-}
-
-rewindBtn.onclick = (e) => {
-	e.preventDefault();
-	backward();
-	rewindBtn.setAttribute('disabled',true);
-	forwardBtn.removeAttribute('disabled');
-}
 
 /**
  * Scene
@@ -70,12 +40,54 @@ const material = new THREE.MeshBasicMaterial( { map: videoTexture} );
 const mesh = new THREE.Mesh( geometry, material );
 scene.add(mesh);
 
+/**
+ * Dom
+ */
+
+ const playBtn = document.querySelector('.playBtn');
+ const forwardBtn = document.querySelector('.forwardBtn');
+ const rewindBtn = document.querySelector('.rewindBtn');
+ const playIcon = document.querySelector('.playIcon');
+ const pauseIcon = document.querySelector('.pauseIcon');
+ const loading = document.querySelector('.loading');
+ pauseIcon.style.display = 'none';
+ rewindBtn.setAttribute('disabled',true);
+ 
+ playBtn.onclick = (e) => {
+	 e.preventDefault();
+	 play();
+ }
+ 
+ forwardBtn.onclick = (e) => {
+	 e.preventDefault();
+	 forwardBtn.setAttribute('disabled',true);
+	 rewindBtn.removeAttribute('disabled');
+	 if(video.readyState >= 2){
+		forward();
+	 }
+ }
+ 
+ rewindBtn.onclick = (e) => {
+	 e.preventDefault();
+ 
+	 rewindBtn.setAttribute('disabled',true);
+	 forwardBtn.removeAttribute('disabled');
+	 if(video.readyState >= 2){
+		backward();
+	 }
+	 
+ }
 
 let isPlaying = false;
 let continueAtTime = 0;
 let midpoint = video.duration/2;
 let isForward = true;
 let isBackward = false;
+
+video.onerror = (event) => {
+	console.log(event);
+}
+
 video.addEventListener('timeupdate', () => {
 	if (isForward && video.currentTime > midpoint ) {
 		forwardBtn.setAttribute('disabled',true);
@@ -106,7 +118,6 @@ video.addEventListener('waiting', () => {
 	else{
 		loading.style.display = 'inline'; 
 	}
-
 })
 
 /**
@@ -115,6 +126,7 @@ video.addEventListener('waiting', () => {
 video.addEventListener('ended', () => {
 	isForward = true;
 	isBackward = false;
+	video.load();
 })
 
 video.addEventListener('pause', () => {
@@ -125,7 +137,7 @@ video.addEventListener('pause', () => {
 
 function play(){
 	if(isPlaying) {
-		video.pause() 
+		video.pause();
 	}else{
 		if(isForward){
 			forwardBtn.setAttribute('disabled',true);
@@ -139,12 +151,15 @@ function play(){
 }
 
 function forward() {
+	console.log('forward',video.readyState);
 	isForward ? continuousTo('forward') : changingTo('backward-forward');
 	video.currentTime = continueAtTime;
 	video.play();
+	
 }
 
 function backward(){
+	console.log('backward',video.readyState);
 	isBackward ? continuousTo('backward') : changingTo('forward-backward');
 	video.currentTime = continueAtTime;
 	video.play();
