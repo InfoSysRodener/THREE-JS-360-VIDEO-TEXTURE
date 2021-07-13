@@ -43,7 +43,7 @@ scene.add(mesh);
 
 let isPlaying = false;
 let continueAtTime = 0;
-let midpoint = video.duration/2;
+let midpoint = 0;
 let isForward = true;
 let isBackward = false;
 video.currentTime = 0;
@@ -63,28 +63,25 @@ video.currentTime = 0;
  playBtn.onclick = (e) => {
 	e.preventDefault();
 	if(video.readyState >= 2){
-	 play();
+		midpoint = video.duration / 2;		
+	 	play();
 	}
  }
  
  forwardBtn.onclick = (e) => {
 	 e.preventDefault();
+	 
 	 forwardBtn.setAttribute('disabled',true);
 	 rewindBtn.removeAttribute('disabled');
-	 if(video.readyState >= 2){
-		forward();
-	 }
+	 forward(); 
  }
  
  rewindBtn.onclick = (e) => {
 	 e.preventDefault();
- 
+
 	 rewindBtn.setAttribute('disabled',true);
 	 forwardBtn.removeAttribute('disabled');
-	 if(video.readyState >= 2){
-		console.log(video.duration); 
-		backward();
-	 }
+	 backward();
 	 
  }
 
@@ -149,22 +146,19 @@ function play(){
 }
 
 function forward() {
-	console.log('forward',video.readyState);
-	console.log('putangina mo',video.currentTime);
-	isForward ? continuousTo('forward') : changingTo('backward-forward');
-	video.currentTime = continueAtTime;
-	video.play();
-	
+	if(video.readyState >= 2){
+		isForward ? continuousTo('forward') : changingTo('backward-forward');
+		video.currentTime = continueAtTime;
+		video.play()
+	}
 }
 
 function backward(){
-	console.log('backward',video.readyState);
-	console.log('putangina mo',video.currentTime);
-	console.log('putangina mo midpoint', midpoint);
-	isBackward ? continuousTo('backward') : changingTo('forward-backward');
-	console.log('putangina mo',((video.currentTime - midpoint) * -1)  + midpoint);
-	video.currentTime = continueAtTime;
-	video.play();
+	if(video.readyState >= 2){
+		isBackward ? continuousTo('backward') : changingTo('forward-backward');
+		video.currentTime = continueAtTime;
+		video.play();
+	}
 }
 
 function changingTo(value){
@@ -172,12 +166,12 @@ function changingTo(value){
 		case 'forward-backward' :
 			isForward = false;
 			isBackward = true;
-			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
+			continueAtTime = ((video.currentTime - (video.duration / 2)) * -1)  + midpoint;
 			break;
 		case 'backward-forward' :
 			isForward = true;
 			isBackward = false;
-			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
+			continueAtTime = ((video.currentTime - (video.duration / 2)) * -1)  + midpoint;
 			break;	
 	}
 }
