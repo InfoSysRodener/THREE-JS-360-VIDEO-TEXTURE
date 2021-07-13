@@ -150,19 +150,15 @@ function play(){
 
 function forward() {
 	console.log('forward',video.readyState);
-	// isForward ? continuousTo('forward') : changingTo('backward-forward');
-	continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
-	console.log('from', video.currentTime);
+	isForward ? continuousTo('forward') : changingTo('backward-forward');
 	video.currentTime = continueAtTime;
-	console.log('to',video.currentTime);
 	video.play();
 	
 }
 
 function backward(){
 	console.log('backward',video.readyState);
-	// isBackward ? continuousTo('backward') : changingTo('forward-backward');
-	continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
+	isBackward ? continuousTo('backward') : changingTo('forward-backward');
 	video.currentTime = continueAtTime;
 	video.play();
 }
