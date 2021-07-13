@@ -40,10 +40,18 @@ const material = new THREE.MeshBasicMaterial( { map: videoTexture} );
 const mesh = new THREE.Mesh( geometry, material );
 scene.add(mesh);
 
+
+let isPlaying = false;
+let continueAtTime = 0;
+let videoDuration = 0;
+let midpoint = videoDuration/2;
+let isForward = true;
+let isBackward = false;
+video.currentTime = 0;
+
 /**
  * Dom
  */
-
  const playBtn = document.querySelector('.playBtn');
  const forwardBtn = document.querySelector('.forwardBtn');
  const rewindBtn = document.querySelector('.rewindBtn');
@@ -75,18 +83,15 @@ scene.add(mesh);
 	 rewindBtn.setAttribute('disabled',true);
 	 forwardBtn.removeAttribute('disabled');
 	 if(video.readyState >= 2){
+		console.log(video.duration); 
+		videoDuration = video.duration;
 		backward();
 	 }
 	 
  }
 
-let isPlaying = false;
-let continueAtTime = 0;
-let midpoint = video.duration/2;
-let isForward = true;
-let isBackward = false;
-video.currentTime = 0;
-video.load();
+
+
 
 video.addEventListener('timeupdate', () => {
 	if (isForward && video.currentTime > midpoint ) {
