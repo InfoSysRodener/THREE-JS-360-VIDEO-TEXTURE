@@ -43,8 +43,7 @@ scene.add(mesh);
 
 let isPlaying = false;
 let continueAtTime = 0;
-let videoDuration = 0;
-let midpoint = videoDuration/2;
+let midpoint = video.duration/2;
 let isForward = true;
 let isBackward = false;
 video.currentTime = 0;
@@ -84,7 +83,6 @@ video.currentTime = 0;
 	 forwardBtn.removeAttribute('disabled');
 	 if(video.readyState >= 2){
 		console.log(video.duration); 
-		videoDuration = video.duration;
 		backward();
 	 }
 	 
