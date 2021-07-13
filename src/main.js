@@ -15,20 +15,23 @@ const pauseIcon = document.querySelector('.pauseIcon');
 const loading = document.querySelector('.loading');
 pauseIcon.style.display = 'none';
 
-playBtn.onclick = () => {
+playBtn.onclick = (e) => {
+	e.preventDefault();
 	play();
 	rewindBtn.removeAttribute('disabled');
 	forwardBtn.removeAttribute('disabled');
 }
 
-forwardBtn.onclick = () => {
+forwardBtn.onclick = (e) => {
+	e.preventDefault();
 	forward();
 	forwardBtn.setAttribute('disabled',true);
 	playBtn.removeAttribute('disabled');
 	rewindBtn.removeAttribute('disabled');
 }
 
-rewindBtn.onclick = () => {
+rewindBtn.onclick = (e) => {
+	e.preventDefault();
 	backward();
 	rewindBtn.setAttribute('disabled',true);
 	playBtn.removeAttribute('disabled');
@@ -90,7 +93,6 @@ video.addEventListener('playing', () => {
 	 */
 	videoTexture.update();
 
-	
 	isPlaying = true;
 	pauseIcon.style.display = 'inline';
 	playIcon.style.display = 'none';
