@@ -43,7 +43,7 @@ const scene = new SceneManager(canvas);
 const clock = new THREE.Clock();
 scene.scene.background.set('#101010');
 const controls = scene.addOrbitControl();
-controls.maxDistance = 500;
+controls.maxDistance = 300;
 controls.minDistance = 1;
 
 /**
@@ -66,7 +66,7 @@ videoTexture.magFilter = THREE.LinearFilter;
  */
 const geometry = new THREE.SphereGeometry( 500, 60, 60 );
 geometry.scale(-1,1,1);
-const material = new THREE.MeshBasicMaterial( { map: videoTexture } );
+const material = new THREE.MeshBasicMaterial( { map: videoTexture} );
 const mesh = new THREE.Mesh( geometry, material );
 scene.add(mesh);
 
@@ -76,17 +76,20 @@ let continueAtTime = 0;
 let midpoint = video.duration/2;
 let isForward = true;
 let isBackward = false;
-
+play();
 video.addEventListener('timeupdate', () => {
 	if (isForward && video.currentTime > midpoint ) {
 		forwardBtn.setAttribute('disabled',true);
 		video.currentTime = midpoint;
+		loading.style.display = 'none';
 		video.pause();
 	} 
 });
 
 video.addEventListener('playing', () => {
 	isPlaying = true;
+	pauseIcon.style.display = 'inline';
+	playIcon.style.display = 'none';
 	loading.style.display = 'none';
 })
 
@@ -97,18 +100,14 @@ video.addEventListener('waiting', () => {
 	loading.style.display = 'inline'; 
 })
 
+video.addEventListener('pause', () => {
+	isPlaying = false;
+	pauseIcon.style.display = 'none';
+	playIcon.style.display = 'inline';
+})
 
 function play(){
-	if(isPlaying){
-		video.pause();
-		isPlaying = false;
-		pauseIcon.style.display = 'none';
-		playIcon.style.display = 'inline';
-	}else{
-		video.play();
-		pauseIcon.style.display = 'inline';
-		playIcon.style.display = 'none';
-	}
+	isPlaying ?	video.pause() :	video.play();
 }
 
 function forward() {

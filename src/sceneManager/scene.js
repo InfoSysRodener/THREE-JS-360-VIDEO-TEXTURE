@@ -62,7 +62,6 @@ export default class SceneManager {
         controls.minZoom = 10;
         controls.maxZoom = 10;
         controls.enableDamping = true;
-      
         return controls;
     }
 
