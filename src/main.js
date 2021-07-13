@@ -85,11 +85,7 @@ let continueAtTime = 0;
 let midpoint = video.duration/2;
 let isForward = true;
 let isBackward = false;
-
-video.onerror = (event) => {
-	console.log(event);
-}
-
+video.currentTime = continueAtTime;
 video.addEventListener('timeupdate', () => {
 	if (isForward && video.currentTime > midpoint ) {
 		forwardBtn.setAttribute('disabled',true);
