@@ -162,16 +162,17 @@ function backward(){
 }
 
 function changingTo(value){
+	let midpoint = video.duration / 2;
 	switch(value){
 		case 'forward-backward' :
 			isForward = false;
 			isBackward = true;
-			continueAtTime = ((video.currentTime - (video.duration / 2)) * -1)  + midpoint;
+			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
 			break;
 		case 'backward-forward' :
 			isForward = true;
 			isBackward = false;
-			continueAtTime = ((video.currentTime - (video.duration / 2)) * -1)  + midpoint;
+			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
 			break;	
 	}
 }
