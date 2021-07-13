@@ -76,17 +76,21 @@ let continueAtTime = 0;
 let midpoint = video.duration/2;
 let isForward = true;
 let isBackward = false;
-play();
 video.addEventListener('timeupdate', () => {
 	if (isForward && video.currentTime > midpoint ) {
 		forwardBtn.setAttribute('disabled',true);
 		video.currentTime = midpoint;
-		loading.style.display = 'none';
 		video.pause();
 	} 
 });
 
 video.addEventListener('playing', () => {
+	/**
+	 * Update Texture
+	 */
+	videoTexture.update();
+
+	
 	isPlaying = true;
 	pauseIcon.style.display = 'inline';
 	playIcon.style.display = 'none';
@@ -97,7 +101,13 @@ video.addEventListener('waiting', () => {
 	/**
 	 * Loading 
 	 */
-	loading.style.display = 'inline'; 
+	if(video.currentTime == midpoint){
+		loading.style.display = 'none'; 
+	}
+	else{
+		loading.style.display = 'inline'; 
+	}
+
 })
 
 video.addEventListener('pause', () => {
@@ -155,7 +165,7 @@ function continuousTo(value){
 
 
 const animate = () => {
-	videoTexture.update();
+	
 	
 	controls.update();
 	
