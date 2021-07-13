@@ -85,7 +85,9 @@ let continueAtTime = 0;
 let midpoint = video.duration/2;
 let isForward = true;
 let isBackward = false;
-video.currentTime = continueAtTime;
+video.currentTime = 0;
+video.load();
+
 video.addEventListener('timeupdate', () => {
 	if (isForward && video.currentTime > midpoint ) {
 		forwardBtn.setAttribute('disabled',true);
@@ -95,11 +97,6 @@ video.addEventListener('timeupdate', () => {
 });
 
 video.addEventListener('playing', () => {
-	/**
-	 * Update Texture
-	 */
-	videoTexture.update();
-
 	isPlaying = true;
 	pauseIcon.style.display = 'inline';
 	playIcon.style.display = 'none';
@@ -197,7 +194,10 @@ function continuousTo(value){
 
 
 const animate = () => {
-	
+	/**
+	 * Update Texture
+	 */
+	 videoTexture.update();
 	
 	controls.update();
 	
