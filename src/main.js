@@ -2,8 +2,8 @@ import '../style.css'
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 import SceneManager from './sceneManager/scene';
-
-
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+const gui = new dat.GUI();
 
 /**
  * Scene
@@ -13,8 +13,36 @@ const scene = new SceneManager(canvas);
 const clock = new THREE.Clock();
 scene.scene.background.set('#101010');
 const controls = scene.addOrbitControl();
-controls.maxDistance = 300;
-controls.minDistance = 1;
+controls.target.set(0,0,1);
+controls.maxDistance = 3000;
+controls.minDistance = -3000;
+controls.panSpeed = 3;
+controls.rotateSpeed = 3;
+controls.zoomSpeed = 3;
+
+controls.mouseButtons = {
+	LEFT: THREE.MOUSE.ROTATE,
+	MIDDLE: THREE.MOUSE.DOLLY,
+	RIGHT: THREE.MOUSE.PAN
+}
+
+
+controls.touches = {
+	ONE: THREE.TOUCH.ROTATE,
+	TWO: THREE.TOUCH.DOLLY_PAN
+}
+
+
+let minPan = new THREE.Vector3( - 2500, - 2500, - 2500 );
+let maxPan = new THREE.Vector3( 2500, 2500, 2500 );
+let _v = new THREE.Vector3();
+    
+controls.addEventListener("change", function() {
+    _v.copy(controls.target);
+    controls.target.clamp(minPan, maxPan);
+    _v.sub(controls.target);
+    scene.camera.position.sub(_v);
+});
 
 /**
  * Lights
@@ -34,12 +62,33 @@ videoTexture.magFilter = THREE.LinearFilter;
 /**
  * Mesh
  */
-const geometry = new THREE.SphereGeometry( 500, 60, 60 );
+const geometry = new THREE.SphereGeometry( 6000, 60, 60 );
 geometry.scale(-1,1,1);
-const material = new THREE.MeshBasicMaterial( { map: videoTexture} );
+const material = new THREE.MeshBasicMaterial( { map: videoTexture } );
 const mesh = new THREE.Mesh( geometry, material );
 scene.add(mesh);
 
+
+/**
+ * GUI Camera
+ */
+ gui.add(controls,'zoomSpeed').min(1).max(5).step(1);
+ gui.add(controls,'panSpeed').min(1).max(5).step(1);
+ gui.add(controls,'rotateSpeed').min(1).max(5).step(1);
+ const cameraGui = gui.addFolder('Camera');
+ cameraGui.add(scene.camera.position, 'x').min(-1200).max(1200).step(0.001);
+ cameraGui.add(scene.camera.position, 'y').min(-1200).max(1200).step(0.001);
+ cameraGui.add(scene.camera.position, 'z').min(-1200).max(1200).step(0.001);
+ 
+
+ gui.add(video, 'playbackRate').min(0.5).max(3).step(0.001).name('VideoSpeed');
+
+
+controls.position0.set(1000,0,0);
+
+/**
+ * Video 
+ */
 
 let isPlaying = false;
 let continueAtTime = 0;
@@ -84,8 +133,6 @@ video.currentTime = 0;
 	 backward();
 	 
  }
-
-
 
 
 video.addEventListener('timeupdate', () => {
@@ -193,16 +240,15 @@ function continuousTo(value){
 }
 
 
-
-
 const animate = () => {
+	const elapsedTime = clock.elapsedTime;
 	/**
 	 * Update Texture
 	 */
-	 videoTexture.update();
+	videoTexture.update();
 	
 	controls.update();
-	
+
 	scene.onUpdate();
 	scene.onUpdateStats();
 	requestAnimationFrame( animate );

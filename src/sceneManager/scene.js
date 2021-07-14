@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import Stats from 'stats.js';
 
 export default class SceneManager {
@@ -19,8 +20,8 @@ export default class SceneManager {
 
         window.addEventListener('resize', () => this.onWindowsResize(), false);
 
-        const camera = new THREE.PerspectiveCamera(75 ,window.innerWidth / window.innerHeight,0.1,1000);
-        camera.position.z = 20;
+        const camera = new THREE.PerspectiveCamera(75 ,window.innerWidth / window.innerHeight,0.1,15000);
+        camera.position.z = 100;
         camera.position.y = 5;
         camera.lookAt(0,0,0);
 
@@ -58,10 +59,15 @@ export default class SceneManager {
 
     addOrbitControl(){
         const controls = new OrbitControls(this.camera, this.canvas);
-        controls.target.set(0, 0, 0);
-        controls.minZoom = 10;
-        controls.maxZoom = 10;
         controls.enableDamping = true;
+        return controls;
+    }
+
+    addTrackBallControl(){
+        const controls = new TrackballControls( this.camera, this.canvas );
+		controls.rotateSpeed = 2.0;
+		controls.zoomSpeed = 1.2;
+		controls.panSpeed = 2.8;
         return controls;
     }
 
