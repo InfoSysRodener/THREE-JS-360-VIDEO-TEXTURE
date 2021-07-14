@@ -13,7 +13,7 @@ const scene = new SceneManager(canvas);
 const clock = new THREE.Clock();
 scene.scene.background.set('#101010');
 const controls = scene.addOrbitControl();
-controls.target.set(0,0,1);
+controls.target.set(1,1,1);
 controls.maxDistance = 3000;
 controls.minDistance = -3000;
 controls.panSpeed = 3;
@@ -72,24 +72,21 @@ scene.add(mesh);
 /**
  * GUI Camera
  */
- gui.add(controls,'zoomSpeed').min(1).max(5).step(1);
- gui.add(controls,'panSpeed').min(1).max(5).step(1);
- gui.add(controls,'rotateSpeed').min(1).max(5).step(1);
- const cameraGui = gui.addFolder('Camera');
- cameraGui.add(scene.camera.position, 'x').min(-1200).max(1200).step(0.001);
- cameraGui.add(scene.camera.position, 'y').min(-1200).max(1200).step(0.001);
- cameraGui.add(scene.camera.position, 'z').min(-1200).max(1200).step(0.001);
- 
+ const debugCamera = {
+	 speed:3
+ };
 
- gui.add(video, 'playbackRate').min(0.5).max(3).step(0.001).name('VideoSpeed');
+ gui.add(debugCamera,'speed').min(1).max(5).step(1).onFinishChange(() => {
+	 controls.panSpeed = debugCamera.speed;
+	 controls.rotateSpeed = debugCamera.speed;
+	 controls.zoomSpeed = debugCamera.speed;
+ }).name('Camera Speed');
 
-
-controls.position0.set(1000,0,0);
+ gui.add(video, 'playbackRate').min(0.5).max(3).step(0.001).name('Video Speed');
 
 /**
  * Video 
  */
-
 let isPlaying = false;
 let continueAtTime = 0;
 let midpoint = 0;
@@ -133,6 +130,26 @@ video.currentTime = 0;
 	 backward();
 	 
  }
+
+ 
+ /**
+  * Keyboard
+  */
+ window.addEventListener('keyup', (event) => {
+	
+	if(event.key === 'ArrowUp' && event.code === 'ArrowUp'){
+		forwardBtn.setAttribute('disabled',true);
+		rewindBtn.removeAttribute('disabled');
+		forward();
+	}
+
+	if(event.key === 'ArrowDown' && event.code === 'ArrowDown'){
+		rewindBtn.setAttribute('disabled',true);
+		forwardBtn.removeAttribute('disabled');
+		backward();
+		console.log('backward',event);
+	}
+  });
 
 
 video.addEventListener('timeupdate', () => {
@@ -194,14 +211,17 @@ function play(){
 
 function forward() {
 	if(video.readyState >= 2){
+		midpoint = video.duration / 2;	
 		isForward ? continuousTo('forward') : changingTo('backward-forward');
 		video.currentTime = continueAtTime;
-		video.play()
+		video.play();
 	}
+	
 }
 
 function backward(){
 	if(video.readyState >= 2){
+		midpoint = video.duration / 2;	
 		isBackward ? continuousTo('backward') : changingTo('forward-backward');
 		video.currentTime = continueAtTime;
 		video.play();
@@ -209,7 +229,7 @@ function backward(){
 }
 
 function changingTo(value){
-	let midpoint = video.duration / 2;
+	// let midpoint = video.duration / 2;
 	switch(value){
 		case 'forward-backward' :
 			isForward = false;
