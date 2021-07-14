@@ -204,7 +204,7 @@ video.addEventListener('playing', () => {
  * Ended
  */
 video.addEventListener('ended', () => {
-	isForward = false;
+	isForward = true;
 	// video.load();
 })
 
@@ -234,7 +234,7 @@ function backward(){
 }
 
 function switching(){
-	video.currentTime = ((video.currentTime - midpoint) * -1)  + midpoint;;
+	video.currentTime = ((video.currentTime - midpoint) * -1)  + midpoint;
 	video.play();
 }
 
