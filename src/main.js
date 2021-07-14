@@ -88,13 +88,11 @@ scene.add(mesh);
  * Video 
  */
 let isPlaying = false;
-let continueAtTime = 0;
 let midpoint = 0;
 let isForward = true;
-let isBackward = false;
 // video.currentTime = 0;
 // video.play();
-if(video.readyState >= 3){
+if(video.readyState >= 1){
 	midpoint = video.duration / 2;
 }
 /**
@@ -206,7 +204,7 @@ video.addEventListener('playing', () => {
  * Ended
  */
 video.addEventListener('ended', () => {
-	isForward = true;
+	isForward = false;
 	// video.load();
 })
 
