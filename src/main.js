@@ -92,8 +92,11 @@ let continueAtTime = 0;
 let midpoint = 0;
 let isForward = true;
 let isBackward = false;
-video.currentTime = 0;
-
+// video.currentTime = 0;
+// video.play();
+if(video.readyState >= 3){
+	midpoint = video.duration / 2;
+}
 /**
  * Dom
  */
@@ -107,47 +110,45 @@ video.currentTime = 0;
  rewindBtn.setAttribute('disabled',true);
  
  playBtn.onclick = (e) => {
-	e.preventDefault();
-	if(video.readyState >= 2){
-		midpoint = video.duration / 2;		
-	 	play();
-	}
+	e.preventDefault();	
+	play();
  }
  
  forwardBtn.onclick = (e) => {
 	 e.preventDefault();
-	 
-	 forwardBtn.setAttribute('disabled',true);
-	 rewindBtn.removeAttribute('disabled');
 	 forward(); 
+	 changingIcon();
  }
  
  rewindBtn.onclick = (e) => {
 	 e.preventDefault();
-
-	 rewindBtn.setAttribute('disabled',true);
-	 forwardBtn.removeAttribute('disabled');
 	 backward();
-	 
+	 changingIcon();
  }
 
- 
+ function changingIcon(){
+	 if(isForward){
+		forwardBtn.setAttribute('disabled',true);
+		rewindBtn.removeAttribute('disabled');
+	 }else{
+		rewindBtn.setAttribute('disabled',true);
+		forwardBtn.removeAttribute('disabled');
+	 }
+ }
+
  /**
   * Keyboard
   */
  window.addEventListener('keyup', (event) => {
 	
 	if(event.key === 'ArrowUp' && event.code === 'ArrowUp'){
-		forwardBtn.setAttribute('disabled',true);
-		rewindBtn.removeAttribute('disabled');
 		forward();
+		changingIcon();
 	}
 
 	if(event.key === 'ArrowDown' && event.code === 'ArrowDown'){
-		rewindBtn.setAttribute('disabled',true);
-		forwardBtn.removeAttribute('disabled');
 		backward();
-		console.log('backward',event);
+		changingIcon();
 	}
   });
 
@@ -164,28 +165,49 @@ video.addEventListener('playing', () => {
 	isPlaying = true;
 	pauseIcon.style.display = 'inline';
 	playIcon.style.display = 'none';
-	loading.style.display = 'none';
-})
+	// loading.style.display = 'none';
+});
 
-video.addEventListener('waiting', () => {
-	/**
-	 * Loading 
-	 */
-	if(video.currentTime == midpoint){
-		loading.style.display = 'none'; 
-	}
-	else{
-		loading.style.display = 'inline'; 
-	}
-})
+// video.addEventListener('seeking', (event) => {
+// 	console.log('Video is seeking a new position.');
+// });
+
+// video.addEventListener('seeked', (event) => {
+// 	console.log('Video found the playback position it was looking for.');
+// });
+
+// video.addEventListener("suspend", function(e) {
+//     console.log("[Suspended] loading of video");
+//     if ( video.readyState == 4 ) {
+//         console.log("[Finished] loading of video");
+//     }
+// });
+
+// video.addEventListener('loadedmetadata', function() {
+//     if (video.buffered.length === 0) return;
+
+//     const bufferedSeconds = video.buffered.end(0) - video.buffered.start(0);
+//     console.log(`${bufferedSeconds} seconds of video are ready to play.`);
+// });
+
+// video.addEventListener('waiting', () => {
+// 	/**
+// 	 * Loading 
+// 	 */
+// 	if(video.currentTime == midpoint){
+// 		loading.style.display = 'none'; 
+// 	}
+// 	else{
+// 		loading.style.display = 'inline'; 
+// 	}
+// })
 
 /**
  * Ended
  */
 video.addEventListener('ended', () => {
 	isForward = true;
-	isBackward = false;
-	video.load();
+	// video.load();
 })
 
 video.addEventListener('pause', () => {
@@ -198,70 +220,58 @@ function play(){
 	if(isPlaying) {
 		video.pause();
 	}else{
-		if(isForward){
-			forwardBtn.setAttribute('disabled',true);
-			rewindBtn.removeAttribute('disabled');
-		}else{
-			forwardBtn.removeAttribute('disabled',true);
-			rewindBtn.setAttribute('disabled',true);
-		}
+		changingIcon();
 		video.play();
 	}
 }
 
 function forward() {
-	if(video.readyState >= 2){
-		midpoint = video.duration / 2;	
-		isForward ? continuousTo('forward') : changingTo('backward-forward');
-		video.currentTime = continueAtTime;
-		video.play();
-	}
-	
+	isForward = true;
+	switching();
 }
 
 function backward(){
-	if(video.readyState >= 2){
-		midpoint = video.duration / 2;	
-		isBackward ? continuousTo('backward') : changingTo('forward-backward');
-		video.currentTime = continueAtTime;
-		video.play();
-	}
+	isForward = false;
+	switching();
 }
 
-function changingTo(value){
-	// let midpoint = video.duration / 2;
-	switch(value){
-		case 'forward-backward' :
-			isForward = false;
-			isBackward = true;
-			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
-			break;
-		case 'backward-forward' :
-			isForward = true;
-			isBackward = false;
-			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
-			break;	
-	}
+function switching(){
+	video.currentTime = ((video.currentTime - midpoint) * -1)  + midpoint;;
+	video.play();
 }
 
-function continuousTo(value){
-	switch(value){
-		case 'forward' :
-			isForward = true;
-			isBackward = false;
-			continueAtTime = video.currentTime;
-			break;
-		case 'backward':
-			isForward = false;
-			isBackward = true;
-			continueAtTime = video.currentTime;
-			break;
-	}
-}
+// function changingTo(value){
+// 	switch(value){
+// 		case 'forward-backward' :
+// 			isForward = false;
+// 			isBackward = true;
+// 			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
+// 			break;
+// 		case 'backward-forward' :
+// 			isForward = true;
+// 			isBackward = false;
+// 			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
+// 			break;	
+// 	}
+// }
+
+// function continuousTo(value){
+// 	switch(value){
+// 		case 'forward' :
+// 			isForward = true;
+// 			isBackward = false;
+// 			continueAtTime = video.currentTime;
+// 			break;
+// 		case 'backward':
+// 			isForward = false;
+// 			isBackward = true;
+// 			continueAtTime = video.currentTime;
+// 			break;
+// 	}
+// }
 
 
 const animate = () => {
-	const elapsedTime = clock.elapsedTime;
 	/**
 	 * Update Texture
 	 */

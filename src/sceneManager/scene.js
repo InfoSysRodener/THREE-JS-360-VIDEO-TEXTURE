@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import Stats from 'stats.js';
 
 export default class SceneManager {
@@ -63,13 +62,6 @@ export default class SceneManager {
         return controls;
     }
 
-    addTrackBallControl(){
-        const controls = new TrackballControls( this.camera, this.canvas );
-		controls.rotateSpeed = 2.0;
-		controls.zoomSpeed = 1.2;
-		controls.panSpeed = 2.8;
-        return controls;
-    }
 
     onUpdateStats() {
         return this.stats.update();
