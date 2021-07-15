@@ -2,7 +2,6 @@ import '../style.css'
 import * as THREE from 'three';
 import * as dat from 'dat.gui';
 import SceneManager from './sceneManager/scene';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 const gui = new dat.GUI();
 
 /**
@@ -26,12 +25,10 @@ controls.mouseButtons = {
 	RIGHT: THREE.MOUSE.PAN
 }
 
-
 controls.touches = {
 	ONE: THREE.TOUCH.ROTATE,
 	TWO: THREE.TOUCH.DOLLY_PAN
 }
-
 
 let minPan = new THREE.Vector3( - 2500, - 2500, - 2500 );
 let maxPan = new THREE.Vector3( 2500, 2500, 2500 );
@@ -87,14 +84,9 @@ scene.add(mesh);
 /**
  * Video 
  */
-let isPlaying = false;
 let midpoint = 0;
 let isForward = true;
-// video.currentTime = 0;
-// video.play();
-if(video.readyState >= 1){
-	midpoint = video.duration / 2;
-}
+
 /**
  * Dom
  */
@@ -103,10 +95,9 @@ if(video.readyState >= 1){
  const rewindBtn = document.querySelector('.rewindBtn');
  const playIcon = document.querySelector('.playIcon');
  const pauseIcon = document.querySelector('.pauseIcon');
- const loading = document.querySelector('.loading');
  pauseIcon.style.display = 'none';
- rewindBtn.setAttribute('disabled',true);
  
+
  playBtn.onclick = (e) => {
 	e.preventDefault();	
 	play();
@@ -154,72 +145,36 @@ if(video.readyState >= 1){
 video.addEventListener('timeupdate', () => {
 	if (isForward && video.currentTime > midpoint ) {
 		forwardBtn.setAttribute('disabled',true);
+		isForward = true;
 		video.currentTime = midpoint;
 		video.pause();
 	}
 });
 
 video.addEventListener('playing', () => {
-	isPlaying = true;
 	pauseIcon.style.display = 'inline';
 	playIcon.style.display = 'none';
-	// loading.style.display = 'none';
 });
-
-// video.addEventListener('seeking', (event) => {
-// 	console.log('Video is seeking a new position.');
-// });
-
-// video.addEventListener('seeked', (event) => {
-// 	console.log('Video found the playback position it was looking for.');
-// });
-
-// video.addEventListener("suspend", function(e) {
-//     console.log("[Suspended] loading of video");
-//     if ( video.readyState == 4 ) {
-//         console.log("[Finished] loading of video");
-//     }
-// });
-
-// video.addEventListener('loadedmetadata', function() {
-//     if (video.buffered.length === 0) return;
-
-//     const bufferedSeconds = video.buffered.end(0) - video.buffered.start(0);
-//     console.log(`${bufferedSeconds} seconds of video are ready to play.`);
-// });
-
-// video.addEventListener('waiting', () => {
-// 	/**
-// 	 * Loading 
-// 	 */
-// 	if(video.currentTime == midpoint){
-// 		loading.style.display = 'none'; 
-// 	}
-// 	else{
-// 		loading.style.display = 'inline'; 
-// 	}
-// })
 
 /**
  * Ended
  */
 video.addEventListener('ended', () => {
-	isForward = true;
-	// video.load();
+	isForward = false;
+	video.pause();
 })
 
 video.addEventListener('pause', () => {
-	isPlaying = false;
 	pauseIcon.style.display = 'none';
 	playIcon.style.display = 'inline';
 })
 
 function play(){
-	if(isPlaying) {
-		video.pause();
-	}else{
+	if(video.paused){
+		playVideo();
 		changingIcon();
-		video.play();
+	}else{
+		video.pause();
 	}
 }
 
@@ -235,38 +190,20 @@ function backward(){
 
 function switching(){
 	video.currentTime = ((video.currentTime - midpoint) * -1)  + midpoint;
-	video.play();
 }
 
-// function changingTo(value){
-// 	switch(value){
-// 		case 'forward-backward' :
-// 			isForward = false;
-// 			isBackward = true;
-// 			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
-// 			break;
-// 		case 'backward-forward' :
-// 			isForward = true;
-// 			isBackward = false;
-// 			continueAtTime = ((video.currentTime - midpoint) * -1)  + midpoint;
-// 			break;	
-// 	}
-// }
 
-// function continuousTo(value){
-// 	switch(value){
-// 		case 'forward' :
-// 			isForward = true;
-// 			isBackward = false;
-// 			continueAtTime = video.currentTime;
-// 			break;
-// 		case 'backward':
-// 			isForward = false;
-// 			isBackward = true;
-// 			continueAtTime = video.currentTime;
-// 			break;
-// 	}
-// }
+async function playVideo(){
+	if(video.readyState >= 2){
+		try{
+			midpoint = video.duration / 2;
+			await video.play();
+		}catch(err){
+			console.log('error',err);
+		}
+	}
+}
+
 
 
 const animate = () => {
