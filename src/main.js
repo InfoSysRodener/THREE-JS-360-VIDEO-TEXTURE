@@ -86,6 +86,7 @@ scene.add(mesh);
  */
 let midpoint = 0;
 let isForward = true;
+let theEnd = false;
 
 /**
  * Dom
@@ -96,7 +97,8 @@ let isForward = true;
  const playIcon = document.querySelector('.playIcon');
  const pauseIcon = document.querySelector('.pauseIcon');
  pauseIcon.style.display = 'none';
- 
+ rewindBtn.setAttribute('disabled',true);
+ forwardBtn.setAttribute('disabled',true);
 
  playBtn.onclick = (e) => {
 	e.preventDefault();	
@@ -148,6 +150,7 @@ video.addEventListener('timeupdate', () => {
 		isForward = true;
 		video.currentTime = midpoint;
 		video.pause();
+		theEnd = true;
 	}
 });
 
@@ -186,6 +189,10 @@ function forward() {
 function backward(){
 	isForward = false;
 	switching();
+	if(theEnd){
+		video.play();
+		theEnd = false;
+	}
 }
 
 function switching(){
